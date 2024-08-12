@@ -6,7 +6,7 @@ import { ScrollToolConfig } from "@/scroll-tool-config";
 import { JsonEditor } from 'json-edit-react'
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useLocalStorage } from "@uidotdev/usehooks";
+import { useLocalStorage } from "usehooks-ts";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -49,7 +49,7 @@ const getOpacityAndPointerEvents = (
 export default function Page() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const [jsonData, setJsonData] = useLocalStorage("scroll", ScrollToolConfig)
+  const [jsonData, setJsonData] = useLocalStorage("scroll", ScrollToolConfig, {initializeWithValue: false})
 
   const { breakpoint, scrollDistance, frameCount, canvas, blocks } = jsonData;
 
@@ -68,7 +68,11 @@ export default function Page() {
 
     for (let i = 0; i < frameCount; i++) {
       const img = new Image();
-      img.src = `/img/scroll-tool/breakpoints/${breakpoint}/${i + 1}.jpg`;
+      if (process.env.NODE_ENV === 'development') {
+        img.src = `/img/scroll-tool/breakpoints/${breakpoint}/${i + 1}.jpg`;
+      } else {
+        img.src = `./img/scroll-tool/breakpoints/${breakpoint}/${i + 1}.jpg`;
+      }
       //img.src = currentFrame(i);
       images.push(img);
     }
@@ -141,6 +145,7 @@ export default function Page() {
             );
           })}
         </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/img/scroll-tool/breakpoints/1560/1.jpg" alt=""/>
         <button type="button" onClick={toggleModal} className="fixed bottom-4 right-4 bg-amber-400 px-4 py-2 z-20">
           Upravit Config
