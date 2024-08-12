@@ -158,6 +158,7 @@ export default function Page() {
                 mainMenuBar={false}
                 statusBar={true}
                 navigationBar={true}
+                //@ts-ignore
                 setData={ setJsonData }
                 //className="fixed inset-0 z-50"
             />
