@@ -49,7 +49,7 @@ const getOpacityAndPointerEvents = (
 export default function Page() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const [jsonData, setJsonData] = useLocalStorage("scroll", ScrollToolConfig, {initializeWithValue: false})
+  const [jsonData, setJsonData] = useLocalStorage("scroll", ScrollToolConfig, {initializeWithValue: true})
 
   const { breakpoint, scrollDistance, frameCount, canvas, blocks } = jsonData;
 
