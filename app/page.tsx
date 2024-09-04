@@ -51,7 +51,7 @@ export default function Page() {
 
   const [jsonData, setJsonData] = useLocalStorage("scroll", ScrollToolConfig, {initializeWithValue: true})
 
-  const { breakpoint, scrollDistance, frameCount, canvas, blocks } = jsonData;
+  const { breakpoint, scrollDistance, frameCount, canvas, blocks, backgroundColor } = jsonData;
 
   useGSAP(() => {
     //canvasRef.current!.width = 1158;
@@ -129,7 +129,7 @@ export default function Page() {
 
 
   return (
-      <div className="relative">
+      <div className="relative" style={{backgroundColor}}>
         <canvas
             id="scroll-tool-canvas"
             ref={canvasRef}

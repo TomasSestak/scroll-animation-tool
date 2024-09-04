@@ -6,6 +6,7 @@ export const ScrollToolConfig = {
 		width: 1920,
 		height: 1280,
 	},
+	backgroundColor: "white",
 	blocks: [
 		{
 			id: 'first-headline',

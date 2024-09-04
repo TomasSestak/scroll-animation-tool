@@ -12,7 +12,7 @@ import {ScrollTrigger} from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const ClientLottie = ({data}: { data: any }) => {
+export const ClientLottie = () => {
 
 	const [lottieData, setLottieData] = useLocalStorage('lottie', null, {initializeWithValue: false})
 
@@ -38,7 +38,7 @@ export const ClientLottie = ({data}: { data: any }) => {
 
 	const [jsonData, setJsonData] = useLocalStorage('scroll', ScrollToolConfig, {initializeWithValue: true})
 
-	const {scrollDistance, frameCount} = jsonData;
+	const {scrollDistance, frameCount, backgroundColor} = jsonData;
 
 
 	useGSAP(() => {
@@ -84,7 +84,7 @@ export const ClientLottie = ({data}: { data: any }) => {
 
 
 	return (
-		<>
+		<main style={{backgroundColor}}>
 			<div>
 				<div className="h-screen overflow-hidden" id="lottie-animation">
 					{lottieData &&
@@ -129,6 +129,6 @@ export const ClientLottie = ({data}: { data: any }) => {
 					</div>
 				}
 			</div>
-		</>
+		</main>
 	)
 }
