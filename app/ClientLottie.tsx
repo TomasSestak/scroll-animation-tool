@@ -1,19 +1,38 @@
-"use client"
-import {useRef, useState} from 'react';
+'use client'
+import {ChangeEventHandler, useRef, useState} from 'react';
 import type {AnimationItem} from 'lottie-web';
 import {useLocalStorage} from 'usehooks-ts';
 import {ScrollToolConfig} from '@/scroll-tool-config';
 import {useGSAP} from '@gsap/react';
 import {gsap} from 'gsap';
-import Lottie from "react-lottie-player";
+import Lottie from 'react-lottie-player';
 
 import {JsonEditor} from 'json-edit-react';
 import {ScrollTrigger} from 'gsap/ScrollTrigger';
-import LottieData from '@/public/small.json'
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const ClientLottie = ({data}: {data: any}) => {
+export const ClientLottie = ({data}: { data: any }) => {
+
+	const [lottieData, setLottieData] = useLocalStorage('lottie', null, {initializeWithValue: false})
+
+	const onChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+		const file = event.target.files![0];
+		if (file && file.type === 'application/json') {
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				try {
+					const json = JSON.parse(e.target!.result! as any);
+					setLottieData(json)
+				} catch (error) {
+					console.error('Error parsing JSON file:', error);
+				}
+			};
+			reader.readAsText(file);
+		} else {
+			console.error('Please upload a valid JSON file.');
+		}
+	}
 
 	const ref = useRef<AnimationItem | undefined>(null);
 
@@ -23,12 +42,15 @@ export const ClientLottie = ({data}: {data: any}) => {
 
 
 	useGSAP(() => {
+		if (!lottieData) {
+			return
+		}
 		const frames = {
 			frame: 0,
 		};
 
 
-		console.log(frameCount, scrollDistance, "ZDEEE")
+		console.log(lottieData, 'ZDEEE')
 
 		gsap.to(
 			{},
@@ -52,7 +74,7 @@ export const ClientLottie = ({data}: {data: any}) => {
 				},
 			},
 		);
-	})
+	}, {dependencies: [lottieData]})
 
 	const [modal, setModal] = useState(false);
 
@@ -61,26 +83,28 @@ export const ClientLottie = ({data}: {data: any}) => {
 	}
 
 
-
-
-
 	return (
 		<>
 			<div>
 				<div className="h-screen overflow-hidden" id="lottie-animation">
-					<Lottie
-						ref={ref}
-						animationData={data}
-						rendererSettings={{
-							preserveAspectRatio: 'xMidYMid slice',
-							imagePreserveAspectRatio: 'xMidYMid slice',
-						}}
-						className="absolute left-[50%] top-[50%] size-full translate-x-[-50%] translate-y-[-50%]"
-					/>
+					{lottieData &&
+						<Lottie
+							ref={ref}
+							animationData={lottieData}
+							rendererSettings={{
+								preserveAspectRatio: 'xMidYMid slice',
+								imagePreserveAspectRatio: 'xMidYMid slice',
+							}}
+							className="absolute left-[50%] top-[50%] size-full translate-x-[-50%] translate-y-[-50%]"
+						/>
+					}
 				</div>
 
 			</div>
 			<div>
+				<div className="fixed bottom-20 right-4 bg-amber-400 px-4 py-2 z-20">
+					<input type="file" onChange={onChange}/>
+				</div>
 				<button type="button" onClick={toggleModal}
 						className="fixed bottom-4 right-4 bg-amber-400 px-4 py-2 z-20">
 					Upravit Config
